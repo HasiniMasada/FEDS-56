@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodShare - Community Food Donation Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f3;
+            color: #243b2a;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            background: white;
+            padding: 12px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #d8ead8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #15803d;
+        }
+
+        .logo span {
+            color: #f97316;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: #555;
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav button {
+            border: none;
+            background: transparent;
+            color: #333;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        nav button:hover {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .login-btn {
+            background: #15803d !important;
+            color: white !important;
+        }
+
+        /* ================= PAGE ================= */
+
+        .page {
+            display: none;
+            padding: 25px 5%;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ================= HOME ================= */
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+            border-radius: 18px;
+            overflow: hidden;
+            min-height: 320px;
+            align-items: center;
+        }
+
+        .hero-content {
+            padding: 40px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            color: #166534;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: #f97316;
+        }
+
+        .hero p {
+            margin: 15px 0;
+            font-size: 17px;
+            color: #4b5563;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .green-btn {
+            background: #15803d;
+            color: white;
+        }
+
+        .orange-btn {
+            background: #f97316;
+            color: white;
+        }
+
+        .hero-image {
+            height: 100%;
+            min-height: 320px;
+            background:
+                linear-gradient(rgba(22,101,52,.15),rgba(22,101,52,.15)),
+                url("https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=80");
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* ================= ICON CARDS ================= */
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .feature {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        }
+
+        .feature .icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .feature h3 {
+            color: #166534;
+            margin-bottom: 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 5px solid #15803d;
+        }
+
+        .stat h2 {
+            color: #15803d;
+        }
+
+        /* ================= COMMON ================= */
+
+        .title {
+            margin-bottom: 20px;
+        }
+
+        .title h2 {
+            color: #166534;
+            font-size: 28px;
+        }
+
+        .title p {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5c7;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #15803d;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        /* ================= FOOD LIST ================= */
+
+        .search-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-area input {
+            flex: 1;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 15px;
+        }
+
+        .food-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        }
+
+        .food-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .food-card h3 {
+            color: #166534;
+        }
+
+        .food-info {
+            font-size: 13px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .available {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .requested {
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        /* ================= TRACKING ================= */
+
+        .tracking {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 35px 10px;
+        }
+
+        .tracking::before {
+            content: "";
+            position: absolute;
+            top: 17px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: #d1d5db;
+            z-index: 0;
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 25%;
+        }
+
+        .circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #15803d;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            font-weight: bold;
+        }
+
+        .step.pending .circle {
+            background: #d1d5db;
+            color: #555;
+        }
+
+        .step p {
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        /* ================= DASHBOARD ================= */
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 15px;
+        }
+
+        .dash-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        }
+
+        .dash-card h1 {
+            color: #15803d;
+            margin: 8px 0;
+        }
+
+        .chart {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .bars {
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            height: 220px;
+            border-bottom: 2px solid #999;
+            margin-top: 20px;
+        }
+
+        .bar {
+            width: 50px;
+            background: #15803d;
+            color: white;
+            text-align: center;
+            padding-top: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        /* ================= AWARENESS ================= */
+
+        .awareness-grid {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 15px;
+        }
+
+        .awareness-card {
+            background: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        }
+
+        .awareness-card .big-icon {
+            font-size: 40px;
+        }
+
+        .tips {
+            margin-top: 20px;
+            background: #dcfce7;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .tips li {
+            margin: 10px 0;
+            list-style: none;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #166534;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        footer h2 {
+            margin-bottom: 8px;
+        }
+
+        /* ================= TOAST ================= */
+
+        #message {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #15803d;
+            color: white;
+            padding: 15px 22px;
+            border-radius: 8px;
+            display: none;
+            z-index: 500;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media(max-width: 900px) {
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image {
+                min-height: 220px;
+            }
+
+            .feature-grid,
+            .stats,
+            .dashboard-cards,
+            .awareness-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+
+            .feature-grid,
+            .stats,
+            .dashboard-cards,
+            .awareness-grid,
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .food-card {
+                grid-template-columns: 1fr;
+            }
+
+            nav button {
+                font-size: 11px;
+                padding: 6px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .tracking {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .tracking::before {
+                display: none;
+            }
+
+            .step {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div>
+        <div class="logo">🌿 Food<span>Share</span></div>
+        <div class="tagline">
+            Share Food • Reduce Waste • Fight Hunger
+        </div>
+    </div>
+
+    <nav>
+        <button onclick="showPage('home')">Home</button>
+        <button onclick="showPage('donor')">Donate</button>
+        <button onclick="showPage('find')">Find Food</button>
+        <button onclick="showPage('request')">Request</button>
+        <button onclick="showPage('tracking')">Tracking</button>
+        <button onclick="showPage('dashboard')">Dashboard</button>
+        <button onclick="showPage('about')">About</button>
+        <button onclick="showPage('contact')">Contact</button>
+        <button class="login-btn" onclick="showMessage('Login feature selected')">
+            Login
+        </button>
+    </nav>
+
+</header>
+
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="page active">
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Share Food<br>
+                <span>Reduce Waste</span><br>
+                Fight Hunger
+            </h1>
+
+            <p>
+                Every meal shared makes a difference!
+            </p>
+
+            <div class="hero-buttons">
+                <button class="btn green-btn"
+                        onclick="showPage('donor')">
+                    Donate Food
+                </button>
+
+                <button class="btn orange-btn"
+                        onclick="showPage('find')">
+                    Find Food
+                </button>
+            </div>
+
+        </div>
+
+        <div class="hero-image"></div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature">
+            <div class="icon">🌱</div>
+            <h3>Save Food</h3>
+            <p>Reduce avoidable food waste.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">👥</div>
+            <h3>Help People</h3>
+            <p>Connect food with people in need.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">❤️</div>
+            <h3>Support Community</h3>
+            <p>Build stronger communities.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">🌍</div>
+            <h3>Sustainable Future</h3>
+            <p>Support responsible consumption.</p>
+        </div>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <h2>1,200+</h2>
+            <p>Meals Shared</p>
+        </div>
+
+        <div class="stat">
+            <h2>350+</h2>
+            <p>Donors</p>
+        </div>
+
+        <div class="stat">
+            <h2>40+</h2>
+            <p>NGOs / Volunteers</p>
+        </div>
+
+        <div class="stat">
+            <h2>10+</h2>
+            <p>Cities</p>
+        </div>
+
+    </div>
+
+
+    <div class="card" style="margin-top:25px;">
+
+        <h2 style="color:#166534;">Our Mission</h2>
+
+        <p style="margin-top:10px;">
+            To reduce food waste by connecting surplus food with
+            people in need through a simple and efficient platform.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DONOR REGISTRATION ================= -->
+
+<section id="donor" class="page">
+
+    <div class="title">
+        <h2>Register as a Donor</h2>
+        <p>Join us to share surplus food and make a positive impact.</p>
+    </div>
+
+    <div class="card">
+
+        <form id="donorForm">
+
+            <div class="form-row">
+
+                <div>
+                    <label>Full Name *</label>
+                    <input type="text"
+                           id="donorName"
+                           placeholder="Enter your name"
+                           required>
+                </div>
+
+                <div>
+                    <label>Donor Type *</label>
+                    <select required>
+                        <option value="">Select type</option>
+                        <option>Restaurant</option>
+                        <option>Household</option>
+                        <option>Hotel</option>
+                        <option>Institution</option>
+                        <option>Event</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div>
+                    <label>Phone Number *</label>
+                    <input type="tel"
+                           placeholder="Enter phone number"
+                           required>
+                </div>
+
+                <div>
+                    <label>Email</label>
+                    <input type="email"
+                           placeholder="example@email.com">
+                </div>
+
+            </div>
+
+
+            <div>
+                <label>Location *</label>
+                <input type="text"
+                       placeholder="Enter city"
+                       required>
+            </div>
+
+
+            <div>
+                <label>Address</label>
+                <textarea placeholder="Enter complete address"></textarea>
+            </div>
+
+
+            <label>
+                <input type="checkbox" required>
+                I agree to share accurate information.
+            </label>
+
+
+            <button class="btn green-btn" type="submit">
+                Register
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DONATE FOOD ================= -->
+
+<section id="donate" class="page">
+
+    <div class="title">
+        <h2>Donate Surplus Food</h2>
+        <p>Fill in the details of the food you want to donate.</p>
+    </div>
+
+    <div class="card">
+
+        <form id="donationForm">
+
+            <div class="form-row">
+
+                <div>
+                    <label>Food Name *</label>
+                    <input type="text"
+                           id="foodName"
+                           placeholder="Example: Vegetable Rice"
+                           required>
+                </div>
+
+                <div>
+                    <label>Food Category *</label>
+                    <select id="foodCategory" required>
+                        <option value="">Select category</option>
+                        <option>Vegetarian</option>
+                        <option>Non-Vegetarian</option>
+                        <option>Bakery</option>
+                        <option>Fruits</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div>
+                    <label>Quantity (meals) *</label>
+                    <input type="number"
+                           id="quantity"
+                           min="1"
+                           placeholder="Example: 30"
+                           required>
+                </div>
+
+                <div>
+                    <label>Prepared Date & Time *</label>
+                    <input type="datetime-local" required>
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div>
+                    <label>Consume Before *</label>
+                    <input type="datetime-local" required>
+                </div>
+
+                <div>
+                    <label>Pickup Location *</label>
+                    <input type="text"
+                           placeholder="Enter pickup location"
+                           required>
+                </div>
+
+            </div>
+
+
+            <div>
+                <label>Contact Number *</label>
+                <input type="tel"
+                       placeholder="Enter contact number"
+                       required>
+            </div>
+
+
+            <div>
+                <label>Additional Information</label>
+                <textarea
+                    placeholder="Example: Freshly prepared. Kindly collect before 4 PM.">
+                </textarea>
+            </div>
+
+
+            <button class="btn green-btn" type="submit">
+                Donate Food
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FIND FOOD ================= -->
+
+<section id="find" class="page">
+
+    <div class="title">
+
+        <h2>Find Available Food</h2>
+
+        <p>
+            Search and request food from donors.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="search-area">
+
+            <input type="text"
+                   id="searchInput"
+                   placeholder="Search food e.g. rice, idly, fruits..."
+                   onkeyup="searchFood()">
+
+            <button class="btn green-btn"
+                    onclick="searchFood()">
+                Search
+            </button>
+
+        </div>
+
+
+        <div class="form-row">
+
+            <select id="categoryFilter"
+                    onchange="searchFood()">
+
+                <option value="">All Categories</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Fruits">Fruits</option>
+
+            </select>
+
+
+            <select id="locationFilter"
+                    onchange="searchFood()">
+
+                <option value="">All Locations</option>
+                <option>Vijayawada</option>
+                <option>Guntur</option>
+                <option>Mangalagiri</option>
+                <option>Tadepalli</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div id="foodList" class="food-grid">
+
+        <div class="food-card"
+             data-name="vegetable rice"
+             data-category="Vegetarian"
+             data-location="Vijayawada">
+
+            <img class="food-img"
+                 src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=300&q=80">
+
+            <div>
+
+                <h3>Vegetable Rice</h3>
+
+                <p class="food-info">
+                    🥗 Vegetarian
+                </p>
+
+                <p class="food-info">
+                    📦 30 meals
+                </p>
+
+                <p class="food-info">
+                    📍 Benz Circle, Vijayawada
+                </p>
+
+                <p class="available">
+                    ● Available
+                </p>
+
+                <button class="btn green-btn"
+                        onclick="requestFood('Vegetable Rice')">
+                    Request
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="food-card"
+             data-name="idly sambar"
+             data-category="Vegetarian"
+             data-location="Guntur">
+
+            <img class="food-img"
+                 src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=300&q=80">
+
+            <div>
+
+                <h3>Idly & Sambar</h3>
+
+                <p class="food-info">
+                    🥗 Vegetarian
+                </p>
+
+                <p class="food-info">
+                    📦 20 meals
+                </p>
+
+                <p class="food-info">
+                    📍 Guntur
+                </p>
+
+                <p class="available">
+                    ● Available
+                </p>
+
+                <button class="btn green-btn"
+                        onclick="requestFood('Idly & Sambar')">
+                    Request
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="food-card"
+             data-name="chapati curry"
+             data-category="Vegetarian"
+             data-location="Mangalagiri">
+
+            <img class="food-img"
+                 src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=300&q=80">
+
+            <div>
+
+                <h3>Chapati & Curry</h3>
+
+                <p class="food-info">
+                    🥗 Vegetarian
+                </p>
+
+                <p class="food-info">
+                    📦 25 meals
+                </p>
+
+                <p class="food-info">
+                    📍 Mangalagiri
+                </p>
+
+                <p class="requested">
+                    ● Requested
+                </p>
+
+                <button class="btn"
+                        style="background:#6b7280;color:white;">
+                    View
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="food-card"
+             data-name="bread fruits"
+             data-category="Bakery"
+             data-location="Vijayawada">
+
+            <img class="food-img"
+                 src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=300&q=80">
+
+            <div>
+
+                <h3>Bread & Fruits</h3>
+
+                <p class="food-info">
+                    🥖 Bakery/Fruit
+                </p>
+
+                <p class="food-info">
+                    📦 15 packets
+                </p>
+
+                <p class="food-info">
+                    📍 Vijayawada
+                </p>
+
+                <p class="available">
+                    ● Available
+                </p>
+
+                <button class="btn green-btn"
+                        onclick="requestFood('Bread & Fruits')">
+                    Request
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= REQUEST FOOD ================= -->
+
+<section id="request" class="page">
+
+    <div class="title">
+
+        <h2>Request Food</h2>
+
+        <p>
+            Fill in your details to request available food.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <form id="requestForm">
+
+            <div class="form-row">
+
+                <div>
+                    <label>Food Name *</label>
+
+                    <input type="text"
+                           id="requestFoodName"
+                           placeholder="Example: Vegetable Rice"
+                           required>
+                </div>
+
+                <div>
+                    <label>Organization *</label>
+
+                    <input type="text"
+                           placeholder="NGO / Organization name"
+                           required>
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div>
+                    <label>Your Name *</label>
+
+                    <input type="text"
+                           placeholder="Enter your name"
+                           required>
+                </div>
+
+                <div>
+                    <label>Phone Number *</label>
+
+                    <input type="tel"
+                           placeholder="Enter phone number"
+                           required>
+                </div>
+
+            </div>
+
+
+            <div>
+                <label>Required Quantity *</label>
+
+                <input type="number"
+                       placeholder="Example: 30"
+                       required>
+            </div>
+
+
+            <div>
+                <label>Pickup Date & Time *</label>
+
+                <input type="datetime-local"
+                       required>
+            </div>
+
+
+            <div>
+                <label>Purpose</label>
+
+                <textarea
+                    placeholder="Example: Distribution to homeless people">
+                </textarea>
+
+            </div>
+
+
+            <button class="btn green-btn"
+                    type="submit">
+
+                Submit Request
+
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ================= TRACKING ================= -->
+
+<section id="tracking" class="page">
+
+    <div class="title">
+
+        <h2>Track Donation Status</h2>
+
+        <p>
+            Check the current status of your donation or request.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3 style="color:#166534;">
+            Vegetable Rice
+        </h3>
+
+        <p style="margin-top:8px;">
+            30 meals | Vegetarian
+        </p>
+
+        <p>
+            📍 Benz Circle, Vijayawada
+        </p>
+
+
+        <div class="tracking">
+
+            <div class="step">
+
+                <div class="circle">✓</div>
+
+                <p>
+                    Donation Created
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="circle">✓</div>
+
+                <p>
+                    Request Received
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="circle">✓</div>
+
+                <p>
+                    Food Collected
+                </p>
+
+            </div>
+
+
+            <div class="step pending">
+
+                <div class="circle">4</div>
+
+                <p>
+                    Food Distributed
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            background:#dcfce7;
+            padding:15px;
+            border-radius:8px;
+            text-align:center;
+        ">
+
+            <strong>Current Status:</strong>
+            Collected
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="page">
+
+    <div class="title">
+
+        <h2>Dashboard</h2>
+
+        <p>
+            Overview of donations and impact.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-cards">
+
+        <div class="dash-card">
+            <p>Total Donations</p>
+            <h1>25</h1>
+            <p>Food donations</p>
+        </div>
+
+        <div class="dash-card">
+            <p>Available</p>
+            <h1>8</h1>
+            <p>Currently available</p>
+        </div>
+
+        <div class="dash-card">
+            <p>Collected</p>
+            <h1>7</h1>
+            <p>Successfully collected</p>
+        </div>
+
+        <div class="dash-card">
+            <p>Distributed</p>
+            <h1>10</h1>
+            <p>Meals distributed</p>
+        </div>
+
+    </div>
+
+
+    <div class="chart">
+
+        <h3>
+            Food Distribution Overview (Meals)
+        </h3>
+
+        <div class="bars">
+
+            <div class="bar" style="height:80px;">
+                8
+            </div>
+
+            <div class="bar" style="height:55px;">
+                5
+            </div>
+
+            <div class="bar" style="height:70px;">
+                7
+            </div>
+
+            <div class="bar" style="height:110px;">
+                10
+            </div>
+
+        </div>
+
+        <div style="
+            display:flex;
+            justify-content:space-around;
+            margin-top:10px;
+        ">
+
+            <span>Available</span>
+            <span>Requested</span>
+            <span>Collected</span>
+            <span>Distributed</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <h2>620</h2>
+            <p>Total Meals Shared</p>
+        </div>
+
+        <div class="stat">
+            <h2>480</h2>
+            <p>Estimated Beneficiaries</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= AWARENESS ================= -->
+
+<section id="about" class="page">
+
+    <div class="title">
+
+        <h2>Why FoodShare?</h2>
+
+        <p>
+            Good food should be shared, not wasted.
+        </p>
+
+    </div>
+
+
+    <div class="awareness-grid">
+
+        <div class="awareness-card">
+
+            <div class="big-icon">🌱</div>
+
+            <h3>Reduce Food Waste</h3>
+
+            <p>
+                Save edible food from unnecessary waste.
+            </p>
+
+        </div>
+
+
+        <div class="awareness-card">
+
+            <div class="big-icon">👥</div>
+
+            <h3>Feed People in Need</h3>
+
+            <p>
+                Connect surplus food with people who need it.
+            </p>
+
+        </div>
+
+
+        <div class="awareness-card">
+
+            <div class="big-icon">❤️</div>
+
+            <h3>Support Communities</h3>
+
+            <p>
+                Encourage people to help their communities.
+            </p>
+
+        </div>
+
+
+        <div class="awareness-card">
+
+            <div class="big-icon">🌍</div>
+
+            <h3>Protect Environment</h3>
+
+            <p>
+                Encourage responsible food consumption.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="tips">
+
+        <h2>Tips to Reduce Food Waste</h2>
+
+        <ul>
+
+            <li>🟢 Plan your meals</li>
+
+            <li>🟢 Store food properly</li>
+
+            <li>🟢 Share surplus food</li>
+
+            <li>🟢 Donate instead of discarding</li>
+
+        </ul>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CONTACT ================= -->
+
+<section id="contact" class="page">
+
+    <div class="title">
+
+        <h2>Contact Us</h2>
+
+        <p>
+            We'd love to hear from you!
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <form id="contactForm">
+
+            <div class="form-row">
+
+                <div>
+
+                    <label>Name *</label>
+
+                    <input type="text"
+                           placeholder="Enter your name"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Email *</label>
+
+                    <input type="email"
+                           placeholder="Enter email"
+                           required>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <label>Message *</label>
+
+                <textarea
+                    placeholder="Enter your message"
+                    required>
+                </textarea>
+
+            </div>
+
+
+            <button class="btn green-btn"
+                    type="submit">
+
+                Send Message
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3 style="color:#166534;">
+            Get in Touch
+        </h3>
+
+        <p style="margin-top:12px;">
+            📧 foodshare@example.com
+        </p>
+
+        <p style="margin-top:8px;">
+            📞 +91 91234 56789
+        </p>
+
+        <p style="margin-top:8px;">
+            📍 Vijayawada, Andhra Pradesh
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>🌿 FoodShare</h2>
+
+    <p>
+        Good Food Should Feed People, Not Landfills.
+    </p>
+
+    <p style="margin-top:10px;">
+        Share Food • Support Communities • Build a Healthier Tomorrow
+    </p>
+
+</footer>
+
+
+<div id="message"></div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    /* PAGE NAVIGATION */
+
+    function showPage(pageId) {
+
+        let pages = document.querySelectorAll(".page");
+
+        pages.forEach(function(page) {
+            page.classList.remove("active");
+        });
+
+        document.getElementById(pageId).classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* MESSAGE */
+
+    function showMessage(text) {
+
+        let message = document.getElementById("message");
+
+        message.innerText = text;
+
+        message.style.display = "block";
+
+        setTimeout(function() {
+            message.style.display = "none";
+        }, 2500);
+    }
+
+
+    /* DONOR FORM */
+
+    document.getElementById("donorForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            showMessage(
+                "Donor registration successful!"
+            );
+
+            this.reset();
+        });
+
+
+    /* DONATION FORM */
+
+    document.getElementById("donationForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            let foodName =
+                document.getElementById("foodName").value;
+
+            let quantity =
+                document.getElementById("quantity").value;
+
+            localStorage.setItem(
+                "lastDonation",
+                foodName + " - " + quantity + " meals"
+            );
+
+            showMessage(
+                "Food donation added successfully!"
+            );
+
+            this.reset();
+
+            showPage("tracking");
+        });
+
+
+    /* REQUEST FORM */
+
+    document.getElementById("requestForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            showMessage(
+                "Food request submitted successfully!"
+            );
+
+            this.reset();
+
+            showPage("tracking");
+        });
+
+
+    /* CONTACT FORM */
+
+    document.getElementById("contactForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            showMessage(
+                "Thank you! Your message has been sent."
+            );
+
+            this.reset();
+        });
+
+
+    /* REQUEST FOOD BUTTON */
+
+    function requestFood(foodName) {
+
+        document.getElementById("requestFoodName").value =
+            foodName;
+
+        showPage("request");
+
+        showMessage(
+            foodName + " selected for request"
+        );
+    }
+
+
+    /* SEARCH AND FILTER */
+
+    function searchFood() {
+
+        let search =
+            document.getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+        let category =
+            document.getElementById("categoryFilter")
+            .value;
+
+        let location =
+            document.getElementById("locationFilter")
+            .value;
+
+        let foods =
+            document.querySelectorAll(".food-card");
+
+
+        foods.forEach(function(food) {
+
+            let name =
+                food.dataset.name;
+
+            let foodCategory =
+                food.dataset.category;
+
+            let foodLocation =
+                food.dataset.location;
+
+
+            let matchesSearch =
+                name.includes(search);
+
+            let matchesCategory =
+                category === "" ||
+                foodCategory === category;
+
+            let matchesLocation =
+                location === "" ||
+                foodLocation === location;
+
+
+            if (
+                matchesSearch &&
+                matchesCategory &&
+                matchesLocation
+            ) {
+
+                food.style.display = "grid";
+
+            } else {
+
+                food.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
